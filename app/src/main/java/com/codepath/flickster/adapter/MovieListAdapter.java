@@ -66,11 +66,18 @@ public class MovieListAdapter extends ArrayAdapter<Movie> {
         int width = DeviceDimensionsHelper.getDisplayWidth(context);
 
         int orientation = context.getResources().getConfiguration().orientation;
+        String imagePath = "";
         if (orientation == Configuration.ORIENTATION_PORTRAIT) {
-            Picasso.with(context).load(movie.getPosterPath()).resize(width/3, height/3).transform(new RoundedCornersTransformation(10, 10)).into(viewHolder.poster);
+            imagePath = movie.getPosterPath();
         }  else if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            Picasso.with(context).load(movie.getBackdropPath()).resize(width/3, height/3).transform(new RoundedCornersTransformation(10, 10)).into(viewHolder.poster);
+            imagePath = movie.getBackdropPath();
         }
+
+        Picasso.with(context).load(imagePath)
+                .resize(width/3, height/3)
+                .transform(new RoundedCornersTransformation(10, 10))
+                .placeholder(R.drawable.progress_animation)
+                .into(viewHolder.poster);
 
 
         viewHolder.title.setText(movie.getTitle());
