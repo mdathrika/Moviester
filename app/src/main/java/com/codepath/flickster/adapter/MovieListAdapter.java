@@ -26,6 +26,7 @@ public class MovieListAdapter extends ArrayAdapter<Movie> {
     private Context context;
     private static class ViewHolder {
         ImageView poster;
+        ImageView play;
         TextView title;
         TextView oview;
     }
@@ -51,6 +52,7 @@ public class MovieListAdapter extends ArrayAdapter<Movie> {
             LayoutInflater inflater = LayoutInflater.from(getContext());
             convertView = inflater.inflate(R.layout.movie, parent, false);
             viewHolder.poster = (ImageView) convertView.findViewById(R.id.posterpath);
+            viewHolder.play = (ImageView) convertView.findViewById(R.id.playbtn);
             viewHolder.title = (TextView) convertView.findViewById(R.id.title);
             viewHolder.oview = (TextView) convertView.findViewById(R.id.overview);
             // Cache the viewHolder object inside the fresh view
@@ -59,6 +61,8 @@ public class MovieListAdapter extends ArrayAdapter<Movie> {
             // View is being recycled, retrieve the viewHolder object from tag
             viewHolder = (ViewHolder) convertView.getTag();
         }
+
+        viewHolder.play.setVisibility(View.GONE);
         // Populate the data into the template view using the data object
         //viewHolder.poster.setImageBitmap(movie.poster);
 
@@ -67,10 +71,15 @@ public class MovieListAdapter extends ArrayAdapter<Movie> {
 
         int orientation = context.getResources().getConfiguration().orientation;
         String imagePath = "";
+        int widthFactor=12, heightFactor=18;
         if (orientation == Configuration.ORIENTATION_PORTRAIT) {
             imagePath = movie.getPosterPath();
+            widthFactor = 12;
+            heightFactor = 18;
         }  else if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
             imagePath = movie.getBackdropPath();
+            widthFactor = 18;
+            heightFactor = 12;
         }
 
         Picasso.with(context).load(imagePath)
@@ -78,6 +87,14 @@ public class MovieListAdapter extends ArrayAdapter<Movie> {
                 .transform(new RoundedCornersTransformation(10, 10))
                 .placeholder(R.drawable.progress_animation)
                 .into(viewHolder.poster);
+
+        if(movie.getPopularity() > 5.0) {
+            System.out.println(movie.getTitle() + " :: Popularity :: " +movie.getPopularity());
+            Picasso.with(context).load(R.drawable.play_circle)
+                    .resize((width/widthFactor), (height/heightFactor))
+                    .into(viewHolder.play);
+            viewHolder.play.setVisibility(View.VISIBLE);
+        }
 
 
         viewHolder.title.setText(movie.getTitle());

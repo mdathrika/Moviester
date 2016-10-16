@@ -28,6 +28,19 @@ public class Movie {
     @SerializedName("release_date")
     Date releaseDate;
 
+    float popularity;
+
+    @SerializedName("vote_average")
+    float voteAvg;
+
+    public float getVoteAvg() {
+        return voteAvg;
+    }
+
+    public float getPopularity() {
+        return popularity;
+    }
+
     public void setTitle(String title) {
         this.title = title;
     }
@@ -81,6 +94,12 @@ public class Movie {
                 movie.title = jsonObject.getString("title");
                 movie.posterPath = "https://image.tmdb.org/t/p/w342" + jsonObject.getString("poster_path");
                 movie.overview = jsonObject.getString("overview");
+
+                movie.popularity = Float.parseFloat(jsonObject.getString("popularity"));
+                movie.voteAvg = Float.parseFloat(jsonObject.getString("vote_average"));
+
+                System.out.println(movie.title + " :: " +jsonObject.getString("popularity") +" :: "+ movie.popularity);
+
                 String url = jsonObject.getString("backdrop_path");
                 if(url == null || url.trim().length() == 0|| url.equals("null"))
                     url = jsonObject.getString("poster_path");
