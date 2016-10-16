@@ -98,8 +98,6 @@ public class Movie {
                 movie.popularity = Float.parseFloat(jsonObject.getString("popularity"));
                 movie.voteAvg = Float.parseFloat(jsonObject.getString("vote_average"));
 
-                System.out.println(movie.title + " :: " +jsonObject.getString("popularity") +" :: "+ movie.popularity);
-
                 String url = jsonObject.getString("backdrop_path");
                 if(url == null || url.trim().length() == 0|| url.equals("null"))
                     url = jsonObject.getString("poster_path");

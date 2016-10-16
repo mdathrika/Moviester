@@ -89,7 +89,6 @@ public class MovieListAdapter extends ArrayAdapter<Movie> {
                 .into(viewHolder.poster);
 
         if(movie.getPopularity() > 5.0) {
-            System.out.println(movie.getTitle() + " :: Popularity :: " +movie.getPopularity());
             Picasso.with(context).load(R.drawable.play_circle)
                     .resize((width/widthFactor), (height/heightFactor))
                     .into(viewHolder.play);
