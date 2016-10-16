@@ -6,6 +6,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -13,7 +14,7 @@ import java.util.List;
 /**
  * Created by mdathrika on 10/13/16.
  */
-public class Movie {
+public class Movie implements Serializable{
 
     String title;
 
@@ -26,7 +27,7 @@ public class Movie {
     String backdropPath;
 
     @SerializedName("release_date")
-    Date releaseDate;
+    String releaseDate;
 
     float popularity;
 
@@ -49,7 +50,7 @@ public class Movie {
         this.overview = overview;
     }
 
-    public void setReleaseDate(Date releaseDate) {
+    public void setReleaseDate(String releaseDate) {
         this.releaseDate = releaseDate;
     }
 
@@ -78,7 +79,7 @@ public class Movie {
         return overview;
     }
 
-    public Date getReleaseDate() {
+    public String getReleaseDate() {
         return releaseDate;
     }
 
@@ -97,6 +98,8 @@ public class Movie {
 
                 movie.popularity = Float.parseFloat(jsonObject.getString("popularity"));
                 movie.voteAvg = Float.parseFloat(jsonObject.getString("vote_average"));
+
+                movie.releaseDate = jsonObject.getString("release_date");
 
                 String url = jsonObject.getString("backdrop_path");
                 if(url == null || url.trim().length() == 0|| url.equals("null"))

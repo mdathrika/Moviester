@@ -1,9 +1,12 @@
 package com.codepath.flickster.activity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.codepath.flickster.entity.Movie;
@@ -21,6 +24,7 @@ public class MovieActivity extends AppCompatActivity {
 
     private SwipeRefreshLayout swipeContainer;
     private MovieListAdapter adapter;
+    private List<Movie> movies;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +48,16 @@ public class MovieActivity extends AppCompatActivity {
                 android.R.color.holo_red_light);
 
 
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
+            @Override
+            public void onItemClick(AdapterView<?> adapter, View item, int pos, long id) {
+                Intent intent = new Intent(context, MovieDetailsActivity.class);
+                intent.putExtra("movie", movies.get(pos));
+                System.out.println("****Before TITLE****"+movies.get(pos).getTitle());
+                startActivity(intent);
+            }
+        });
+
         fetchNowPlayingMovies(listView, this);
     }
 
@@ -57,7 +71,7 @@ public class MovieActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                         try {
-                            List<Movie> movies = Movie.fromJson(response.getJSONArray("results"));
+                            movies = Movie.fromJson(response.getJSONArray("results"));
                             if(adapter == null) {
                                 adapter = new MovieListAdapter(context, movies);
                                 listView.setAdapter(adapter);
@@ -81,5 +95,12 @@ public class MovieActivity extends AppCompatActivity {
                     }
                 }
         );
+    }
+
+    public void onPlay(View view) {
+        System.out.println("****In Movie Activity****");
+        Intent intent = new Intent(this, YoutubePlayActivity.class);
+        intent.putExtra("videoid","6as8ahAr1Uc");
+        startActivity(intent);
     }
 }

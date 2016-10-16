@@ -1,6 +1,7 @@
 package com.codepath.flickster.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +10,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.codepath.flickster.activity.YoutubePlayActivity;
 import com.codepath.flickster.entity.Movie;
 import com.codepath.flickster.R;
 import com.codepath.flickster.helper.DeviceDimensionsHelper;
@@ -98,6 +100,8 @@ public class MovieListAdapter extends ArrayAdapter<Movie> {
 
         viewHolder.title.setText(movie.getTitle());
         viewHolder.oview.setText(movie.getOverview());
+
+
         // Return the completed view to render on screen
         return convertView;
 
