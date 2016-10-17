@@ -34,18 +34,15 @@ public class MovieListAdapter extends ArrayAdapter<Movie> {
     }
 
 
-    //private List<Movie> movies;
-
     public MovieListAdapter(Context context, List<Movie> movies) {
         super(context, R.layout.movie, movies);
-        //this.movies = movies;
         this.context = context;
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         // Get the data item for this position
-        Movie movie = getItem(position);
+        final Movie movie = getItem(position);
         // Check if an existing view is being reused, otherwise inflate the view
         ViewHolder viewHolder; // view lookup cache stored in tag
         if (convertView == null) {
@@ -60,13 +57,10 @@ public class MovieListAdapter extends ArrayAdapter<Movie> {
             // Cache the viewHolder object inside the fresh view
             convertView.setTag(viewHolder);
         } else {
-            // View is being recycled, retrieve the viewHolder object from tag
             viewHolder = (ViewHolder) convertView.getTag();
         }
 
         viewHolder.play.setVisibility(View.GONE);
-        // Populate the data into the template view using the data object
-        //viewHolder.poster.setImageBitmap(movie.poster);
 
         int height = DeviceDimensionsHelper.getDisplayHeight(context);
         int width = DeviceDimensionsHelper.getDisplayWidth(context);
@@ -95,15 +89,25 @@ public class MovieListAdapter extends ArrayAdapter<Movie> {
                     .resize((width/widthFactor), (height/heightFactor))
                     .into(viewHolder.play);
             viewHolder.play.setVisibility(View.VISIBLE);
-        }
 
+            viewHolder.play.setOnClickListener(new View.OnClickListener(){
+
+                @Override
+                public void onClick(View view) {
+                    movie.getMovieId();
+
+                    Intent intent = new Intent(context, YoutubePlayActivity.class);
+                    intent.putExtra("videoid",movie.getVideos().get(0).getKey());
+                    //intent.putExtra("videosList",videos);
+                    context.startActivity(intent);
+
+                }
+            });
+        }
 
         viewHolder.title.setText(movie.getTitle());
         viewHolder.oview.setText(movie.getOverview());
 
-
-        // Return the completed view to render on screen
         return convertView;
-
     }
 }

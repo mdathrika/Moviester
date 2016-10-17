@@ -1,6 +1,12 @@
 package com.codepath.flickster.entity;
 
+import android.content.Intent;
+
+import com.codepath.flickster.activity.YoutubePlayActivity;
 import com.google.gson.annotations.SerializedName;
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.JsonHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -10,6 +16,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import cz.msebera.android.httpclient.Header;
 
 /**
  * Created by mdathrika on 10/13/16.
@@ -33,6 +41,18 @@ public class Movie implements Serializable{
 
     @SerializedName("vote_average")
     float voteAvg;
+
+    String movieId;
+
+    public List<Video> getVideos() {
+        return videos;
+    }
+
+    public void setVideos(List<Video> videos) {
+        this.videos = videos;
+    }
+
+    List<Video> videos;
 
     public float getVoteAvg() {
         return voteAvg;
@@ -83,15 +103,24 @@ public class Movie implements Serializable{
         return releaseDate;
     }
 
+    public String getMovieId() {
+        return movieId;
+    }
+
+    public void setMovieId(String movieId) {
+        this.movieId = movieId;
+    }
+
     public static List<Movie> fromJson(JSONArray jsonArray) {
 
         List<Movie> movies = new ArrayList<>();
         for(int i=0; i<jsonArray.length(); i++) {
             try {
                 JSONObject jsonObject = jsonArray.getJSONObject(i);
-                Movie movie = new Movie();
+                final Movie movie = new Movie();
                 // Deserialize json into object fields
 
+                movie.movieId = jsonObject.getString("id");
                 movie.title = jsonObject.getString("title");
                 movie.posterPath = "https://image.tmdb.org/t/p/w342" + jsonObject.getString("poster_path");
                 movie.overview = jsonObject.getString("overview");
@@ -106,6 +135,25 @@ public class Movie implements Serializable{
                     url = jsonObject.getString("poster_path");
 
                 movie.backdropPath = "https://image.tmdb.org/t/p/w342" + url;
+
+                String videoUrl = "https://api.themoviedb.org/3/movie/"+movie.getMovieId()+"/videos";
+                AsyncHttpClient client = new AsyncHttpClient();
+                RequestParams params = new RequestParams();
+                params.put("api_key", "a07e22bc18f5cb106bfe4cc1f83ad8ed");
+                client.get(videoUrl, params, new JsonHttpResponseHandler() {
+                            @Override
+                            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                                try {
+                                    List <Video> videos = Video.fromJson(response.getJSONArray("results"));
+                                    movie.setVideos(videos);
+                                } catch(Exception e) {
+                                    e.printStackTrace();
+                                }
+                            }
+
+                        }
+                );
+
                 movies.add(movie);
             } catch (JSONException e) {
                 e.printStackTrace();

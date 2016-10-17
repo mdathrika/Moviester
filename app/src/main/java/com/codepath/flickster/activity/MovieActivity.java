@@ -97,10 +97,4 @@ public class MovieActivity extends AppCompatActivity {
         );
     }
 
-    public void onPlay(View view) {
-        System.out.println("****In Movie Activity****");
-        Intent intent = new Intent(this, YoutubePlayActivity.class);
-        intent.putExtra("videoid","6as8ahAr1Uc");
-        startActivity(intent);
-    }
 }
